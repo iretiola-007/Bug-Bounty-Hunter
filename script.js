@@ -2,11 +2,15 @@ const challenges = [
   {
     prompt: `Fix this function to return the sum of two numbers:\n\nfunction add(a, b) {\n  return a - b;\n}`,
     correct: `function add(a, b) {\n  return a + b;\n}`
-},
+  },
   {
     prompt: `Fix the loop to print numbers 1 to 5:\n\nfor (let i = 1; i < 5; i++) {\n  console.log(i);\n}`,
     correct: `for (let i = 1; i <= 5; i++) {\n  console.log(i);\n}`
-}
+  }, 
+  {
+    prompt: `Find the bug:\n\nconst city;\ncity = "Lagos";\nconsole.log(city);`
+    correct: `const city = "Lagos";\nconsole.log(city);`
+  }
 ];
 
 let current = 0;
