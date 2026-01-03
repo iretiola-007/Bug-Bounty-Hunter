@@ -6,10 +6,10 @@ const challenges = [
   {
     prompt: `Fix the loop to print numbers 1 to 5:\n\nfor (let i = 1; i < 5; i++) {\n  console.log(i);\n}`,
     correct: `for (let i = 1; i <= 5; i++) {\n  console.log(i);\n}`
-  }, 
+  },
   {
-    prompt: `Find the bug:\n\nconst city;\ncity = "Lagos";\nconsole.log(city);`
-    correct: `const city = "Lagos";\nconsole.log(city);`
+  prompt: `Find and fix the bug in this code:\n\nconst city;\ncity = "Lagos";\nconsole.log(city);`, 
+  correct: `const city = "Lagos";\nconsole.log(city);`
   }
 ];
 
