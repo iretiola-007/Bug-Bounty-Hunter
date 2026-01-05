@@ -14,7 +14,7 @@ const challenges = [
 ];
 
 let current = 0;
-let score = parseInt(localStorage.getItem('bugBountyScore')) || 0;
+let score = parseInt(sessionStorage.getItem('bugBountyScore')) || 0;
 
 const challengeText = document.getElementById('challenge-text');
 const codeInput = document.getElementById('code-input');
