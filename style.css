@@ -37,3 +37,12 @@ button:hover {
   background-color: #00cc77;
 }
 
+#score {
+  color: #00ff99;
+  font-weight: bold;
+}
+
+button {
+  border-radius: 5px;
+  transition: 0.3s;
+}
