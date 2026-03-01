@@ -123,6 +123,12 @@ submitBtn.addEventListener("click", () => {
   }
 });
 
+function resetReputation() {
+  reputation = 0;
+  localStorage.removeItem("reputation");
+  scoreDisplay.textContent = reputation;
+}
+
 loadChallenge();
 
 
