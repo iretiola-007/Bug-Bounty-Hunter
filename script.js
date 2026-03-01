@@ -1,57 +1,128 @@
 const challenges = [
   {
-    prompt: `Fix this function to return the sum of two numbers:\n\nfunction add(a, b) {\n  return a - b;\n}`,
-    correct: `function add(a, b) {\n  return a + b;\n}`
+    level: "Easy",
+    prompt: `Fix this function to return the sum of two numbers:
+
+function add(a, b) {
+  return a - b;
+}`,
+    functionName: "add",
+    tests: [
+      { args: [2, 3], expected: 5 },
+      { args: [10, 5], expected: 15 }
+    ]
   },
   {
-    prompt: `Fix the loop to print numbers 1 to 5:\n\nfor (let i = 1; i < 5; i++) {\n  console.log(i);\n}`,
-    correct: `for (let i = 1; i <= 5; i++) {\n  console.log(i);\n}`
+    level: "Easy",
+    prompt: `Fix this function to return true if number is even:
+
+function isEven(n) {
+  return n % 2 === 1;
+}`,
+    functionName: "isEven",
+    tests: [
+      { args: [2], expected: true },
+      { args: [3], expected: false }
+    ]
   },
   {
-  prompt: `Find and fix the bug in this code:\n\nconst city;\ncity = "Lagos";\nconsole.log(city);`, 
-  correct: `const city = "Lagos";\nconsole.log(city);`
+    level: "Medium",
+    prompt: `Fix this loop to print numbers 1 to 5:
+
+function printNumbers() {
+  for (let i = 1; i < 5; i++) {
+    console.log(i);
+  }
+}`,
+    functionName: "printNumbers",
+    tests: [
+      { args: [], expected: undefined } // just check no crash
+    ]
   }
 ];
 
 let current = 0;
-let score = parseInt(sessionStorage.getItem('bugBountyScore')) || 0;
+let reputation = parseInt(localStorage.getItem("reputation")) || 0;
+let streak = 0;
+let timeLeft = 60;
+let timerInterval;
 
-const challengeText = document.getElementById('challenge-text');
-const codeInput = document.getElementById('code-input');
-const submitBtn = document.getElementById('submit-btn');
-const feedback = document.getElementById('feedback');
-const scoreDisplay = document.getElementById('score');
+const challengeText = document.getElementById("challenge-text");
+const codeInput = document.getElementById("code-input");
+const submitBtn = document.getElementById("submit-btn");
+const feedback = document.getElementById("feedback");
+const scoreDisplay = document.getElementById("score");
+
+scoreDisplay.textContent = reputation;
+
+function startTimer() {
+  timeLeft = 60;
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      feedback.textContent = "⏰ Time's up!";
+      streak = 0;
+      nextChallenge();
+    }
+  }, 1000);
+}
 
 function loadChallenge() {
-  if (current < challenges.length) {
-    challengeText.textContent = challenges[current].prompt;
-    codeInput.value = '';
-    feedback.textContent = '';
-} else {
-    challengeText.textContent = "🎉 You've completed all challenges!";
-    codeInput.style.display = 'none';
-    submitBtn.style.display = 'none';
-}
+  clearInterval(timerInterval);
+
+  if (challenges.length === 0) return;
+
+  current = Math.floor(Math.random() * challenges.length);
+
+  challengeText.textContent =
+    `[${challenges[current].level}] ` + challenges[current].prompt;
+
+  codeInput.value = "";
+  feedback.textContent = "";
+  startTimer();
 }
 
-submitBtn.addEventListener('click', () => {
-  const userCode = codeInput.value.trim();
-  const correctCode = challenges[current].correct.trim();
-
-  if (userCode === correctCode) {
-    score++;
-    localStorage.setItem('bugBountyScore', score);
-    scoreDisplay.textContent = score;
-    feedback.textContent = "✅ Correct! Moving to next challenge...";
-    current++;
-    setTimeout(loadChallenge, 1500);
-} else {
-    feedback.textContent = "❌ Not quite. Try again!";
+function nextChallenge() {
+  loadChallenge();
 }
+
+submitBtn.addEventListener("click", () => {
+  const userCode = codeInput.value;
+
+  try {
+    const userFunction = new Function(`
+      ${userCode}
+      return ${challenges[current].functionName};
+    `)();
+
+    let passed = true;
+
+    challenges[current].tests.forEach(test => {
+      const result = userFunction(...test.args);
+      if (result !== test.expected) {
+        passed = false;
+      }
+    });
+
+    if (passed) {
+      reputation += 10;
+      streak++;
+      localStorage.setItem("reputation", reputation);
+      scoreDisplay.textContent = reputation;
+      feedback.textContent = `✅ All tests passed! 🔥 Streak: ${streak}`;
+      nextChallenge();
+    } else {
+      feedback.textContent = "❌ Tests failed. Debug again!";
+      streak = 0;
+    }
+
+  } catch (error) {
+    feedback.textContent = "⚠️ Error: " + error.message;
+    streak = 0;
+  }
 });
 
-scoreDisplay.textContent = score;
 loadChallenge();
-
 
 
