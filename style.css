@@ -46,3 +46,17 @@ button {
   border-radius: 5px;
   transition: 0.3s;
 }
+
+#feedback {
+  margin-top: 10px;
+  min-height: 40px;
+}
+
+button {
+  border-radius: 6px;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
